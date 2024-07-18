@@ -2,7 +2,7 @@
 Library    Process
 
 *** Variables ***
-${COMMAND}    python .\Extract_data.py
+${COMMAND}    python Extract_data.py
 ${EXPECTED_OUTPUT}    expected output text
 
 *** Test Cases ***
