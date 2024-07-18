@@ -1,17 +1,13 @@
 *** Settings ***
-Library  OperatingSystem
-Resource  resources/keywords.robot
+Library    Process
 
 *** Variables ***
-${APP_PATH}  ../Extract_data.py
+${COMMAND}    python .\Extract_data.py
+${EXPECTED_OUTPUT}    expected output text
 
 *** Test Cases ***
-Test Launch Application
-    [Documentation]    Teste le lancement de l'application
-    [Tags]             Smoke
-    Start Application
-
-Test Application Functionality
-    [Documentation]    Teste une fonctionnalité de l'application
-    [Tags]             Functional
-    # Ajouter ici les mots-clés pour tester les fonctionnalités spécifiques
+Extraire Données Financières
+    [Documentation]    Test case pour extraire des données financières et les sauvegarder dans un fichier Excel
+    ${result}    Run Process    ${COMMAND}
+    Log    ${result.stdout}
+    Should Contain    ${result.stdout}    ${EXPECTED_OUTPUT}
