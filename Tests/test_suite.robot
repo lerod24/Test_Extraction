@@ -1,7 +1,7 @@
 *** Settings ***
 Library     Process
 Library     OperatingSystem
-Library     pandasLibrar
+Library     pandasLibrary
 Library     DateTime
 Library     calculatrice.py
 
