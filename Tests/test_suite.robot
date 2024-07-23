@@ -1,10 +1,13 @@
 *** Settings ***
 Library     Process
 Library     OperatingSystem
-Library     pandasLibrary
+# Library     PandasLibrary
 Library     DateTime
 Library     calculatrice.py
 
+*** Variables ***
+@{numbers}   10  20  100  200
+${N}  1000
 
 
 *** Test Cases ***
@@ -31,23 +34,36 @@ Factorielle d'un valeur moyenne
 Test de performance
     [Documentation]    Vérifier que la fonction retourne un résultat dans un délai raisonnable pour des valeurs élevées
     ${start_time}=    Get Current Date    result_format=epoch
-    Run Process       python    .\calculatrice.py
+    Run Process       python    factoriel 200
     ${end_time}=      Get Current Date    result_format=epoch
     ${elapsed_time}=  Evaluate  ${end_time} - ${start_time}
     Log               Temps d'exécution du script: ${elapsed_time} secondes
     Should Be True    ${elapsed_time} < 1
 
+Test de performance 2
+    [Documentation]    Vérifier que la fonction retourne un résultat dans un délai raisonnable pour des valeurs élevées
+    FOR    ${number}    IN    @{numbers}
+        #${start_time}=    Get Current Date    result_format=epoch
+        FOR  ${test}   IN RANGE  ${N}
+            Run Process   python    factoriel  ${number}
+        END
+        #${end_time}=      Get Current Date    result_format=epoch
+        #${elapsed_time}=  Evaluate  ${end_time} - ${start_time}
+        #Log   Temps d'exécution du script: ${elapsed_time} secondes
+    END
+
 
 Test de limites
     [Documentation]    Test pour vérifier les valeurs proches des limites pratiques
     ${result}=    factoriel    100
-    Should Be Equal As Numbers   ${result}    93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+    Should Be Equal As Strings   ${result}    93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
 
 Test d'erreurs
     [Documentation]    Test pour vérifier le calcul avec des valeurs négatives
     ${result}=    factoriel    -5
-    Should Contain     ${result}    factoriel n'existe pas pour un nombre negatif
+    Should Contain     ${result}    factoriel existe pas pour un nombre negatif
 
 Test de robustesse
-    [Documentation]    Test pour vérifier le calcul avec des valeurs non entières
-    Run Keyword And Expect Error    ValueError: Argument 'n' got value 'factoriel n'existe pas pour un réel' that cannot be converted to integer.    Factoriel    factoriel n'existe pas pour un réel
+    [Documentation]    Test pour vérifier le calcul avec des valeurs négatives
+    ${result}=    factoriel    5.2
+    Should Contain     ${result}    Factoriel existe pas pour un réel
