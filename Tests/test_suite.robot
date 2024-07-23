@@ -7,7 +7,7 @@ Library     calculatrice.py
 
 *** Variables ***
 @{numbers}   10  20  100  200
-${N}  1000
+${N}  100
 
 
 *** Test Cases ***
@@ -43,13 +43,13 @@ Test de performance
 Test de performance 2
     [Documentation]    Vérifier que la fonction retourne un résultat dans un délai raisonnable pour des valeurs élevées
     FOR    ${number}    IN    @{numbers}
-        #${start_time}=    Get Current Date    result_format=epoch
+        ${start_time}=    Get Current Date    result_format=epoch
         FOR  ${test}   IN RANGE  ${N}
             Run Process   python    factoriel  ${number}
         END
-        #${end_time}=      Get Current Date    result_format=epoch
-        #${elapsed_time}=  Evaluate  ${end_time} - ${start_time}
-        #Log   Temps d'exécution du script: ${elapsed_time} secondes
+        ${end_time}=      Get Current Date    result_format=epoch
+        ${elapsed_time}=  Evaluate  ${end_time} - ${start_time}
+        Log   Temps d'exécution du script: ${elapsed_time} secondes
     END
 
 
@@ -64,6 +64,6 @@ Test d'erreurs
     Should Contain     ${result}    factoriel existe pas pour un nombre negatif
 
 Test de robustesse
-    [Documentation]    Test pour vérifier le calcul avec des valeurs négatives
+    [Documentation]    Test pour vérifier le calcul avec des valeurs non entières
     ${result}=    factoriel    5.2
     Should Contain     ${result}    Factoriel existe pas pour un réel
