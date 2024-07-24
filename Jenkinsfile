@@ -1,18 +1,22 @@
 pipeline {
     agent any
 
+    environment {
+        JMETER_HOME = 'C:\\jmeter\\bin'  // Chemin vers le dossier bin de JMeter
+    }
+
     stages {
         stage('Checkout') {
             steps {
+                // Checkout du code source depuis le référentiel Git
                 checkout scm
             }
         }
 
         stage('Run JMeter Tests') {
             steps {
-                script {
-                    def jmeterHome = tool name: 'JMeter', type: 'hudson.plugins.jmeter.JMeterInstallation'
-                    bat "${jmeterHome}/bin/jmeter -n -t ${WORKSPACE}/Test_Extraction/Tests.jmx -l ${WORKSPACE}/Test_Extraction/results.jtl"
+                dir("Test_Extraction") {
+                    bat "${JMETER_HOME}\\jmeter -n -t Tests.jmx -l results.jtl"
                 }
             }
         }
