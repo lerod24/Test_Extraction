@@ -26,14 +26,6 @@ pipeline {
                 archiveArtifacts artifacts: 'Test_Extraction/results.jtl', allowEmptyArchive: true
             }
         }
-
-        stage('Publish Performance Report') {
-            steps {
-                // Publier les rapports de performance
-                step([$class: 'PerformancePublisher',
-                      parsers: [[$class: 'JMeterParser', glob: 'Test_Extraction/results.jtl']],
-                      showTrendGraphs: true])
-            }
-        }
+        
     }
 }
