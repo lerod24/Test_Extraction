@@ -2,24 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Cloner le Dépot git') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/lerod24/Test_Extraction.git'
+                checkout scm
             }
         }
 
-        stage('Exécuter les Tests JMeter') {
+        stage('Run JMeter Tests') {
             steps {
                 script {
-                    // Exécuter les tests JMeter
-                    bat 'jmeter -n -t Test_Extraction/Tests.jmx -l Test_Extraction/results.jtl'
+                    def jmeterHome = tool name: 'JMeter', type: 'hudson.plugins.jmeter.JMeterInstallation'
+                    bat "${jmeterHome}/bin/jmeter -n -t ${WORKSPACE}/Test_Extraction/Tests.jmx -l ${WORKSPACE}/Test_Extraction/results.jtl"
                 }
             }
         }
 
-        stage('Publier les resultats de Performance') {
+        stage('Archive Results') {
             steps {
-                perfReport filterRegex: '', sourceDataFiles: 'results.jtl'
+                archiveArtifacts artifacts: 'Test_Extraction/results.jtl', allowEmptyArchive: true
             }
         }
     }
