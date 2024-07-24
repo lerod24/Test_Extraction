@@ -36,7 +36,7 @@ pipeline {
                      group: 'Performance',
                      style: 'line',
                      title: 'Test Performance',
-                     yAxis: 'Response Time',
+                     y_Axis: 'Response Time',
                      csvSeries: [[file: 'Test_Extraction/results.csv', label: 'JMeter']]
             }
         }
