@@ -26,6 +26,6 @@ pipeline {
                 archiveArtifacts artifacts: 'Test_Extraction/results.jtl', allowEmptyArchive: true
             }
         }
-        
+
     }
 }
