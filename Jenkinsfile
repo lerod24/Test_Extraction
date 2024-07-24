@@ -2,13 +2,12 @@ pipeline {
     agent any
 
     environment {
-        JMETER_HOME = 'C:\\jmeter\\bin'  // Chemin vers le dossier bin de JMeter
+        JMETER_HOME = '/path/to/jmeter/bin'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout du code source depuis le référentiel Git
                 checkout scm
             }
         }
@@ -16,14 +15,29 @@ pipeline {
         stage('Run JMeter Tests') {
             steps {
                 dir("Test_Extraction") {
-                    bat "${JMETER_HOME}\\jmeter -n -t Tests.jmx -l results.jtl"
+                    sh "${JMETER_HOME}/jmeter -n -t Tests.jmx -l results.jtl"
                 }
             }
         }
 
-        stage('Archive Results') {
+        stage('Generate CSV') {
             steps {
-                archiveArtifacts artifacts: 'Test_Extraction/results.jtl', allowEmptyArchive: true
+                script {
+                    def results = readFile 'Test_Extraction/results.jtl'
+                    // Code pour convertir les résultats en CSV
+                    writeFile file: 'Test_Extraction/results.csv', text: results
+                }
+            }
+        }
+
+        stage('Plot Graphs') {
+            steps {
+                plot csvFileName: 'results.csv',
+                     group: 'Performance',
+                     style: 'line',
+                     title: 'Test Performance',
+                     yAxis: 'Response Time',
+                     csvSeries: [[file: 'Test_Extraction/results.csv', label: 'JMeter']]
             }
         }
     }
