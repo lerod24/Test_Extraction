@@ -20,6 +20,14 @@ pipeline {
                 }
             }
         }
+        stage('Publish Results') {
+            steps {
+                perfReport errorFailedThreshold: 5, errorUnstableThreshold: 1,
+                    jtlParsableReportFile: 'résultats.jtl',
+                    modeOfThreshold: true, relativeFailedThresholdNegative: 10,
+                    relativeFailedThresholdPositive: 10, relativeUnstableThresholdNegative: 5,
+                    relativeUnstableThresholdPositive: 5
+            }
 
         stage('Archive Results') {
             steps {
