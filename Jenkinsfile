@@ -12,6 +12,7 @@ pipeline {
                 checkout scm
             }
         }
+    }
 
         stage('Run JMeter Tests') {
             steps {
